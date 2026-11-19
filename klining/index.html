@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Клининг — расчёт цены и запись на уборку</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
+<style>
+:root{--bg:#f2f8f6;--card:#fff;--ink:#12241f;--muted:#64776f;--line:#dbe8e3;--brand:#0c8a6a;--brand2:#12b886;--soft:#e6f6f0;--wa:#1f9d55}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1613;--card:#13221d;--ink:#e8f4ef;--muted:#93aaa1;--line:#24392f;--brand:#38d9a9;--brand2:#20c997;--soft:#16302a;--wa:#2fb86a}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Manrope",system-ui,sans-serif;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.wrap{max-width:520px;margin:0 auto;display:grid;gap:14px}
+.demo{font-size:12px;color:var(--muted);text-align:center}
+.hero{border-radius:20px;padding:20px 18px;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;gap:6px}
+.hero small{opacity:.85;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.hero h1{margin:0;font-size:23px;line-height:1.2}.hero p{margin:0;opacity:.92;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:12px}
+.card h2{margin:0;font-size:16px}
+.step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--brand);font-size:13px;font-weight:800;margin-right:8px}
+.chips{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.chips.three{grid-template-columns:repeat(3,1fr)}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:10px 8px;font:inherit;font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;display:grid;gap:2px;justify-items:center;text-align:center;min-height:58px}
+.chip span{font-size:20px}.chip em{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:600}
+.chip.on{border-color:var(--brand);background:var(--soft);color:var(--brand)}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:46px;height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-size:22px;font-weight:700;color:var(--ink);cursor:pointer}
+.stepper output{min-width:70px;text-align:center;font-size:22px;font-weight:800}
+.lbl{font-size:13px;color:var(--muted);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--brand)}
+input.f{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
+.opt{display:flex;justify-content:space-between;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;gap:10px}
+.opt.on{border-color:var(--brand);background:var(--soft)}
+.opt b{font-size:14.5px}.opt small{color:var(--muted);font-size:12.5px;display:block}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);font-size:18px;color:var(--ink);cursor:pointer}
+.price{position:sticky;bottom:max(10px,env(safe-area-inset-bottom));background:var(--ink);color:var(--card);border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:5}
+.price b{font-size:22px;display:block;white-space:nowrap}.price small{opacity:.75;font-size:12px}
+.btn{border:0;border-radius:14px;padding:14px 18px;font:inherit;font-weight:800;font-size:15.5px;cursor:pointer;background:var(--brand);color:#fff;min-height:50px}
+.btn.wide{width:100%}.btn.light{background:var(--soft);color:var(--brand)}
+.break{font-size:13.5px;color:var(--muted);display:grid;gap:4px}.break div{display:flex;justify-content:space-between;gap:8px}
+.ok{display:none;text-align:center;gap:10px}.ok.show{display:grid}
+.big{font-size:44px}
+.wa{background:#e7f8ee;border-radius:14px;padding:12px;text-align:left;font-size:13.5px;white-space:pre-wrap;color:#1b3a28}
+@media (prefers-color-scheme:dark){.wa{background:#163223;color:#d8f5e3}}
+.owner{border:2px dashed var(--line)}
+.note{font-size:12px;color:var(--muted);text-align:center}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi div{background:var(--soft);border-radius:12px;padding:8px;text-align:center}.kpi b{display:block;font-size:18px}.kpi span{font-size:11px;color:var(--muted)}
+.sched{display:grid;gap:10px}
+.crew{border:1px solid var(--line);border-radius:14px;padding:10px;display:grid;gap:8px}
+.crew h3{margin:0;font-size:14px;display:flex;justify-content:space-between}
+.slot{display:grid;grid-template-columns:54px 1fr;gap:8px;align-items:start}
+.slot time{font-weight:800;font-size:13px;color:var(--brand)}
+.job{background:var(--soft);border-radius:10px;padding:8px 10px;font-size:13px}
+.job.new{outline:2px solid var(--brand)}
+.job b{display:block;font-size:13.5px}
+.free{font-size:12.5px;color:var(--muted);padding:8px 10px;border:1px dashed var(--line);border-radius:10px}
+.tabs{display:flex;gap:6px}
+.tab{flex:1;border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:9px 10px;font:inherit;font-weight:800;font-size:13px;color:var(--ink);cursor:pointer}
+.tab.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.req{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid;gap:4px;font-size:13px}
+.req .top{display:flex;justify-content:space-between;gap:8px}
+.req select{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:8px;font:inherit;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="demo">Демо-пример · цены условные, настраиваются под вашу компанию</div>
+ <div class="hero"><small>Ваша компания · клининг</small><h1>Цена уборки за 30 секунд</h1><p>Выберите вид уборки и площадь, добавьте опции: цена посчитается сразу, а бригада приедет в удобное время.</p></div>
+
+ <section class="card">
+  <h2><span class="step">1</span>Вид уборки</h2>
+  <div class="chips" id="kinds"></div>
+ </section>
+
+ <section class="card" id="areaCard">
+  <h2><span class="step">2</span>Площадь квартиры</h2>
+  <div class="stepper"><button id="m" aria-label="Меньше">−</button><output id="areaOut">60 м²</output><button id="p" aria-label="Больше">+</button></div>
+  <input type="range" id="area" min="20" max="250" step="5" value="60" aria-label="Площадь">
+ </section>
+
+ <section class="card">
+  <h2><span class="step">3</span>Дополнительно</h2>
+  <div id="opts" style="display:grid;gap:8px"></div>
+ </section>
+
+ <div class="price"><div><small id="pl">Стоимость</small><b id="total">0 ₸</b></div><button class="btn" id="go">Выбрать время</button></div>
+
+ <section class="card" id="form">
+  <h2><span class="step">4</span>Когда и куда приехать</h2>
+  <div class="break" id="break"></div>
+  <div class="lbl">Дата</div><div class="chips three" id="days"></div>
+  <div class="lbl">Время</div><div class="chips three" id="slots"></div>
+  <div class="lbl">Район</div><div class="chips three" id="areas"></div>
+  <input class="f" id="name" placeholder="Ваше имя" autocomplete="name">
+  <input class="f" id="phone" placeholder="+7 7__ ___ __ __" inputmode="tel" autocomplete="tel">
+  <button class="btn wide" id="send">Записаться на уборку</button>
+  <div class="ok" id="ok"><div class="big">✅</div><b>Заявка отправлена!</b><div class="lbl">Менеджер подтвердит время в WhatsApp.</div><div class="lbl">Так заявка выглядит у владельца в WhatsApp:</div><div class="wa" id="waText"></div><button class="btn light wide" id="again">Новый расчёт</button></div>
+ </section>
+
+ <section class="card owner">
+  <h2>👤 Экран владельца</h2>
+  <div class="note">Это видит только владелец. Отправьте заявку выше: она встанет в расписание свободной бригады.</div>
+  <div class="kpi" id="kpi"></div>
+  <div class="tabs"><button class="tab on" data-v="sched" id="schedTab">Бригады · Завтра</button><button class="tab" data-v="reqs">Заявки</button></div>
+  <div id="sched" class="sched"></div>
+  <div id="reqs" class="sched" hidden></div>
+ </section>
+ <div class="demo">Сделано командой Rinix</div>
+</div>
+<script>
+const KINDS=[['🧹','Поддерживающая',300],['✨','Генеральная',600],['🏗','После ремонта',900],['🪟','Мытьё окон',0]];
+const OPTS=[['win','Окна','за створку',1500,true],['fridge','Холодильник','внутри',5000,false],['oven','Духовка','внутри',5000,false],['balc','Балкон','уборка',6000,false]];
+const MIN=15000;
+let st={kind:'Генеральная',area:60,opt:{win:0,fridge:false,oven:false,balc:false},day:null,slot:'10:00',dist:'Центр'};
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ')+' ₸';
+function calc(){
+ const k=KINDS.find(x=>x[1]===st.kind);let base=st.kind==='Мытьё окон'?0:st.area*k[2];
+ const lines=[];if(base)lines.push([`${st.kind}, ${st.area} м²`,base]);
+ OPTS.forEach(([id,n,u,p,q])=>{const v=st.opt[id];if(q&&v)lines.push([`${n} × ${v}`,v*p]);if(!q&&v)lines.push([n,p])});
+ const sum=lines.reduce((a,l)=>a+l[1],0);return {lines,t:Math.max(MIN,sum)};
+}
+function draw(){
+ $('kinds').innerHTML=KINDS.map(([e,n,p])=>`<button class="chip${st.kind===n?' on':''}" data-k="kind" data-v="${n}"><span>${e}</span>${n}<em>${p?p+' ₸/м²':'от 1 500 ₸ за створку'}</em></button>`).join('');
+ $('areaCard').style.display=st.kind==='Мытьё окон'?'none':'';
+ $('areaOut').textContent=st.area+' м²';$('area').value=st.area;
+ $('opts').innerHTML=OPTS.map(([id,n,u,p,q])=>q?`<div class="opt${st.opt[id]?' on':''}"><div><b>${n}</b><small>${fmt(p)} ${u}</small></div><div class="qty"><button data-q="${id}" data-d="-1">−</button><b>${st.opt[id]}</b><button data-q="${id}" data-d="1">+</button></div></div>`:`<div class="opt${st.opt[id]?' on':''}" data-o="${id}"><div><b>${n}</b><small>${u}</small></div><b>+${fmt(p)}</b></div>`).join('');
+ const r=calc();$('total').textContent=fmt(r.t);
+ $('break').innerHTML=r.lines.map(([a,b])=>`<div><span>${a}</span><b>${fmt(b)}</b></div>`).join('')+`<div><span>Итого${r.t===MIN?' (минимальный заказ)':''}</span><b>${fmt(r.t)}</b></div>`;
+}
+const WD=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const days=[...Array(6)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()+i);return i===0?'Сегодня':i===1?'Завтра':`${WD[d.getDay()]} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}`});
+const slots=['09:00','10:00','12:00','14:00','16:00','18:00'];
+const dists=['Центр','Север','Юг','Восток','Запад','Пригород'];
+st.day=days[1];
+function drawTimes(){
+ $('days').innerHTML=days.map(d=>`<button class="chip${st.day===d?' on':''}" data-k="day" data-v="${d}">${d}</button>`).join('');
+ $('slots').innerHTML=slots.map(s=>`<button class="chip${st.slot===s?' on':''}" data-k="slot" data-v="${s}">${s}</button>`).join('');
+ $('areas').innerHTML=dists.map(s=>`<button class="chip${st.dist===s?' on':''}" data-k="dist" data-v="${s}">${s}</button>`).join('');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-k]');if(b){st[b.dataset.k]=b.dataset.v;if(b.dataset.k==='kind'&&b.dataset.v==='Мытьё окон'&&!st.opt.win)st.opt.win=6;draw();drawTimes()}
+ const q=e.target.closest('[data-q]');if(q){st.opt[q.dataset.q]=Math.max(0,Math.min(40,st.opt[q.dataset.q]+ +q.dataset.d));draw()}
+ const o=e.target.closest('[data-o]');if(o){st.opt[o.dataset.o]=!st.opt[o.dataset.o];draw()}
+ const t=e.target.closest('.tab');if(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));$('sched').hidden=t.dataset.v!=='sched';$('reqs').hidden=t.dataset.v!=='reqs'}
+});
+$('m').onclick=()=>{st.area=Math.max(20,st.area-5);draw()};$('p').onclick=()=>{st.area=Math.min(250,st.area+5);draw()};
+$('area').oninput=e=>{st.area=+e.target.value;draw()};
+$('go').onclick=()=>$('form').scrollIntoView({behavior:'smooth'});
+// owner
+const CREWS=['Бригада 1 · Айгуль, Мадина','Бригада 2 · Жанар, Света','Бригада 3 · Асель, Гульнар'];
+let JOBS=[
+ {c:0,t:'09:00',n:'Генеральная, 75 м²',a:'Центр',sum:51000,client:'Алия'},
+ {c:0,t:'14:00',n:'Поддерживающая, 50 м²',a:'Север',sum:15000,client:'Марат'},
+ {c:1,t:'10:00',n:'После ремонта, 90 м²',a:'Юг',sum:87000,client:'Ирина'},
+ {c:2,t:'12:00',n:'Мытьё окон, 8 створок',a:'Восток',sum:15000,client:'Бауыржан'},
+ {c:2,t:'16:00',n:'Генеральная, 45 м² + духовка',a:'Запад',sum:32000,client:'Сауле'}
+];
+let REQS=[{client:'Тимур',what:'Генеральная, 110 м²',when:'Завтра 10:00',sum:66000,st:'Новая'},{client:'Гаухар',what:'Поддерживающая, 40 м²',when:'Пт 12:00',sum:15000,st:'Подтверждена'}];
+function drawOwner(){
+ const sum=JOBS.reduce((a,j)=>a+j.sum,0);
+ $('kpi').innerHTML=`<div><b>${JOBS.length}</b><span>уборок на день</span></div><div><b>${Math.round(sum/1000)}k ₸</b><span>выручка</span></div><div><b>${Math.round(sum*0.4/1000)}k ₸</b><span>клинерам 40%</span></div>`;
+ const hh=t=>+t.slice(0,2)+(+t.slice(3))/60;
+ $('sched').innerHTML=CREWS.map((c,i)=>{const js=JOBS.filter(j=>j.c===i);const free=['09:00','12:00','14:00','16:00'].filter(t=>!js.some(j=>Math.abs(hh(j.t)-hh(t))<2)).map(t=>({t,free:1}));const all=[...js,...free].sort((a,b)=>a.t.localeCompare(b.t));return `<div class="crew"><h3><span>${c}</span><span>${js.length} заказа</span></h3>${all.map(j=>j.free?`<div class="slot"><time>${j.t}</time><div class="free">свободно</div></div>`:`<div class="slot"><time>${j.t}</time><div class="job${j.fresh?' new':''}"><b>${j.fresh?'🆕 ':''}${j.n}</b>${j.client} · ${j.a} · ${fmt(j.sum)}</div></div>`).join('')}</div>`}).join('');
+ $('reqs').innerHTML=REQS.map((r,i)=>`<div class="req"><div class="top"><b>${r.fresh?'🆕 ':''}${r.client}</b><b>${fmt(r.sum)}</b></div><div>${r.what} · ${r.when}</div><select data-r="${i}">${['Новая','Подтверждена','Выполнена','Отменена'].map(s=>`<option${s===r.st?' selected':''}>${s}</option>`).join('')}</select></div>`).join('');
+}
+document.addEventListener('change',e=>{const s=e.target.closest('[data-r]');if(s)REQS[+s.dataset.r].st=s.value});
+$('send').onclick=()=>{
+ const name=$('name').value.trim()||'Клиент',phone=$('phone').value.trim()||'+7 7** *** ** **',r=calc();
+ const what=st.kind==='Мытьё окон'?`Мытьё окон, ${st.opt.win} створок`:`${st.kind}, ${st.area} м²`;
+ const extra=OPTS.filter(([id,,,,q])=>!q&&st.opt[id]).map(o=>o[1].toLowerCase());if(st.kind!=='Мытьё окон'&&st.opt.win)extra.unshift(`окна ×${st.opt.win}`);
+ $('waText').textContent=`🆕 Заявка на уборку\nИмя: ${name}\nТелефон: ${phone}\nУборка: ${what}${extra.length?'\nДоп.: '+extra.join(', '):''}\nКогда: ${st.day}, ${st.slot}\nРайон: ${st.dist}\nСумма: ${fmt(r.t)}`;
+ JOBS.forEach(j=>j.fresh=false);REQS.forEach(j=>j.fresh=false);
+ const hh=t=>+t.slice(0,2)+(+t.slice(3))/60;
+ const crew=[0,1,2].map(c=>({c,busy:JOBS.some(j=>j.c===c&&Math.abs(hh(j.t)-hh(st.slot))<2),n:JOBS.filter(j=>j.c===c).length})).sort((a,b)=>(a.busy-b.busy)||(a.n-b.n))[0].c;
+ const freeT=st.slot;$('schedTab').textContent='Бригады · '+st.day;
+ JOBS.push({c:crew,t:freeT,n:what+(extra.length?' + '+extra.join(', '):''),a:st.dist,sum:r.t,client:name,fresh:true});
+ REQS.unshift({client:name,what,when:`${st.day} ${st.slot}`,sum:r.t,st:'Новая',fresh:true});
+ drawOwner();$('send').style.display='none';$('ok').classList.add('show');
+};
+$('again').onclick=()=>{$('ok').classList.remove('show');$('send').style.display='';window.scrollTo({top:0,behavior:'smooth'})};
+draw();drawTimes();drawOwner();
+</script>
+</body>
+</html>
