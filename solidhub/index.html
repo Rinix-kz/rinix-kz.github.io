@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SolidHub Potolki — расчёт цены и замер</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#141a2a;--muted:#6b7385;--line:#e3e7f0;--brand:#3b5bdb;--brand2:#7048e8;--soft:#eef1fd;--ok:#2b8a3e;--wa:#1f9d55}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1220;--card:#171c2e;--ink:#eef1f8;--muted:#9aa3b8;--line:#2a3150;--brand:#7c95ff;--brand2:#a48bff;--soft:#1f2645;--ok:#69db7c;--wa:#2fb86a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Manrope",system-ui,sans-serif;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.wrap{max-width:520px;margin:0 auto;display:grid;gap:14px}
+.demo{font-size:12px;color:var(--muted);text-align:center}
+.hero{border-radius:20px;padding:20px 18px;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;gap:6px}
+.hero small{opacity:.85;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.hero h1{margin:0;font-size:23px;line-height:1.2}
+.hero p{margin:0;opacity:.9;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:12px}
+.card h2{margin:0;font-size:16px}
+.step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--soft);color:var(--brand);font-size:13px;font-weight:800;margin-right:8px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:10px 6px;font:inherit;font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;display:grid;gap:2px;justify-items:center;min-height:62px}
+.chip span{font-size:20px}
+.chip.on{border-color:var(--brand);background:var(--soft);color:var(--brand)}
+.chips.two{grid-template-columns:repeat(3,1fr)}
+.chip em{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:600}
+.row{display:flex;align-items:center;gap:10px}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:46px;height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-size:22px;font-weight:700;color:var(--ink);cursor:pointer}
+.stepper output{min-width:70px;text-align:center;font-size:22px;font-weight:800}
+.lbl{font-size:13px;color:var(--muted);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--brand)}
+input.f,select.f{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
+.price{position:sticky;bottom:max(10px,env(safe-area-inset-bottom));background:var(--ink);color:var(--card);border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:5}
+.price b{font-size:22px;display:block;white-space:nowrap}
+.price small{opacity:.75;font-size:12px}
+.btn{border:0;border-radius:14px;padding:14px 18px;font:inherit;font-weight:800;font-size:15.5px;cursor:pointer;background:var(--brand);color:#fff;min-height:50px}
+.btn.wide{width:100%}
+.btn.light{background:var(--soft);color:var(--brand)}
+.break{font-size:13.5px;color:var(--muted);display:grid;gap:4px}
+.break div{display:flex;justify-content:space-between}
+.times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ok{display:none;text-align:center;gap:10px}
+.ok.show{display:grid}
+.big{font-size:44px}
+.wa{background:#e7f8ee;border-radius:14px;padding:12px;text-align:left;font-size:13.5px;white-space:pre-wrap;color:#1b3a28}
+@media (prefers-color-scheme:dark){.wa{background:#163223;color:#d8f5e3}}
+.owner{border:2px dashed var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto}
+.tab{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 12px;font:inherit;font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;cursor:pointer}
+.tab.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi div{background:var(--soft);border-radius:12px;padding:8px;text-align:center}
+.kpi b{display:block;font-size:18px}
+.kpi span{font-size:11px;color:var(--muted)}
+.lead{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px}
+.lead.new{border-color:var(--brand);box-shadow:0 0 0 3px var(--soft)}
+.lead .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lead .meta{font-size:13px;color:var(--muted)}
+.pipe{display:flex;gap:4px}
+.pipe button{flex:1;border:0;border-radius:10px;padding:9px 4px;font:inherit;font-size:12.5px;font-weight:800;background:var(--soft);color:var(--muted);cursor:pointer}
+.pipe button.done{background:var(--brand);color:#fff}
+.note{font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="demo">Пример для SolidHub Potolki · цены примерные, поставим ваши</div>
+ <div class="hero"><small>SolidHub Potolki · Атырау</small><h1>Узнайте цену потолка за 30 секунд</h1><p>Выберите комнату, площадь и полотно: цена посчитается сразу. Замер бесплатный.</p></div>
+
+ <section class="card">
+  <h2><span class="step">1</span>Какая комната?</h2>
+  <div class="chips" id="rooms"></div>
+ </section>
+
+ <section class="card">
+  <h2><span class="step">2</span>Площадь потолка</h2>
+  <div class="stepper"><button id="m" aria-label="Меньше">−</button><output id="areaOut">18 м²</output><button id="p" aria-label="Больше">+</button></div>
+  <input type="range" id="area" min="3" max="120" value="18" aria-label="Площадь">
+  <div class="lbl">Не знаете точно? Ставьте примерно: точную площадь замерщик скажет на месте.</div>
+ </section>
+
+ <section class="card">
+  <h2><span class="step">3</span>Полотно</h2>
+  <div class="chips two" id="types"></div>
+ </section>
+
+ <section class="card">
+  <h2><span class="step">4</span>Светильники</h2>
+  <div class="stepper"><button id="lm" aria-label="Меньше">−</button><output id="lampsOut">4 шт</output><button id="lp" aria-label="Больше">+</button></div>
+  <div class="lbl">Точечные светильники с установкой</div>
+ </section>
+
+ <div class="price"><div><small>Цена под ключ</small><b id="total">от 0 ₸</b></div><button class="btn" id="go">Записаться на замер</button></div>
+
+ <section class="card" id="form">
+  <h2><span class="step">5</span>Бесплатный замер</h2>
+  <div class="break" id="break"></div>
+  <input class="f" id="name" placeholder="Ваше имя" autocomplete="name">
+  <input class="f" id="phone" placeholder="+7 7__ ___ __ __" inputmode="tel" autocomplete="tel">
+  <div class="lbl">Удобный день</div>
+  <div class="times" id="days"></div>
+  <div class="lbl">Время</div>
+  <div class="times" id="slots"></div>
+  <button class="btn wide" id="send">Отправить заявку</button>
+  <div class="ok" id="ok"><div class="big">✅</div><b>Заявка отправлена!</b><div class="lbl">Мастер напишет вам в WhatsApp и подтвердит время замера.</div><div class="lbl">Так заявка выглядит у владельца в WhatsApp:</div><div class="wa" id="waText"></div><button class="btn light wide" id="again">Посчитать ещё комнату</button></div>
+ </section>
+
+ <section class="card owner">
+  <h2>👤 Экран владельца</h2>
+  <div class="note">Это видит только владелец. Отправьте заявку выше, и она появится здесь.</div>
+  <div class="kpi" id="kpi"></div>
+  <div class="tabs" id="otabs"></div>
+  <div id="leads" style="display:grid;gap:10px"></div>
+ </section>
+ <div class="demo">Сделано командой Rinix для SolidHub Potolki</div>
+</div>
+<script>
+const ROOMS=[['🛋','Зал'],['🛏','Спальня'],['🍳','Кухня'],['🧸','Детская'],['🚿','Ванная'],['🚪','Коридор']];
+const TYPES=[['Матовый',2400],['Глянцевый',2700],['Сатин',2900]];
+const LAMP=2500, MIN=25000;
+let st={room:'Зал',area:18,type:'Матовый',lamps:4,day:null,slot:null};
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ')+' ₸';
+const calc=()=>{const per=TYPES.find(t=>t[0]===st.type)[1];const c=st.area*per, l=st.lamps*LAMP;return {c,l,t:Math.max(MIN,c+l)}};
+function draw(){
+ $('rooms').innerHTML=ROOMS.map(([e,n])=>`<button class="chip${st.room===n?' on':''}" data-k="room" data-v="${n}"><span>${e}</span>${n}</button>`).join('');
+ $('types').innerHTML=TYPES.map(([n,p])=>`<button class="chip${st.type===n?' on':''}" data-k="type" data-v="${n}">${n}<em>${p.toLocaleString('ru-RU')} ₸/м²</em></button>`).join('');
+ $('areaOut').textContent=st.area+' м²';$('area').value=st.area;$('lampsOut').textContent=st.lamps+' шт';
+ const r=calc();$('total').textContent='от '+fmt(r.t);
+ $('break').innerHTML=`<div><span>${st.room}, ${st.area} м², ${st.type.toLowerCase()}</span><b>${fmt(r.c)}</b></div><div><span>Светильники × ${st.lamps}</span><b>${fmt(r.l)}</b></div><div><span>Итого от</span><b>${fmt(r.t)}</b></div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){st[b.dataset.k]=b.dataset.k==='lamps'?+b.dataset.v:b.dataset.v;draw();if(b.dataset.k==='day'||b.dataset.k==='slot')drawTimes()}});
+$('m').onclick=()=>{st.area=Math.max(3,st.area-1);draw()};$('p').onclick=()=>{st.area=Math.min(120,st.area+1);draw()};
+$('area').oninput=e=>{st.area=+e.target.value;draw()};
+$('lm').onclick=()=>{st.lamps=Math.max(0,st.lamps-1);draw()};$('lp').onclick=()=>{st.lamps=Math.min(40,st.lamps+1);draw()};
+$('go').onclick=()=>$('form').scrollIntoView({behavior:'smooth'});
+const WD=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const days=[...Array(6)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()+i+1);return `${WD[d.getDay()]} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}`});
+const slots=['10:00','12:00','14:00','16:00','18:00','19:30'];
+function drawTimes(){$('days').innerHTML=days.map(d=>`<button class="chip${st.day===d?' on':''}" data-k="day" data-v="${d}">${d}</button>`).join('');$('slots').innerHTML=slots.map(s=>`<button class="chip${st.slot===s?' on':''}" data-k="slot" data-v="${s}">${s}</button>`).join('')}
+st.day=days[0];st.slot='12:00';drawTimes();
+// owner side
+const STAGES=['Замер','Договор','Монтаж'];
+let LEADS=[
+ {n:'Айгерим',ph:'+7 701 *** 12 40',d:days[0],t:'10:00',room:'Зал',area:22,type:'Глянцевый',lamps:6,sum:74400,s:1},
+ {n:'Ержан',ph:'+7 777 *** 55 18',d:days[0],t:'16:00',room:'Кухня',area:9,type:'Матовый',lamps:4,sum:31600,s:1},
+ {n:'Ольга',ph:'+7 705 *** 09 71',d:days[1],t:'12:00',room:'Спальня',area:14,type:'Сатин',lamps:0,sum:40600,s:2},
+ {n:'Нурлан',ph:'+7 747 *** 33 02',d:days[2],t:'18:00',room:'Зал',area:30,type:'Матовый',lamps:8,sum:92000,s:3},
+ {n:'Динара',ph:'+7 702 *** 80 64',d:days[3],t:'14:00',room:'Детская',area:12,type:'Матовый',lamps:4,sum:38800,s:1}
+];
+let tab='Все';
+function drawOwner(){
+ const sum=LEADS.reduce((a,l)=>a+l.sum,0);
+ $('kpi').innerHTML=`<div><b>${LEADS.length}</b><span>заявок</span></div><div><b>${LEADS.filter(l=>l.s>=1).length}</b><span>замеров</span></div><div><b>${LEADS.filter(l=>l.s>=2).length}</b><span>договоров</span></div><div><b>${Math.round(sum/1000)}k</b><span>₸ сумма</span></div>`;
+ const tabs=['Все',...days.slice(0,4)];
+ $('otabs').innerHTML=tabs.map(t=>`<button class="tab${t===tab?' on':''}" data-tab="${t}">${t==='Все'?'Вся неделя':t}</button>`).join('');
+ const rows=LEADS.filter(l=>tab==='Все'||l.d===tab);
+ $('leads').innerHTML=rows.length?rows.map((l,i)=>`<div class="lead${l.fresh?' new':''}"><div class="top"><b>${l.fresh?'🆕 ':''}${l.n} · ${l.room}</b><b>${fmt(l.sum)}</b></div><div class="meta">${l.d}, ${l.t} · ${l.area} м², ${l.type.toLowerCase()}, светильников ${l.lamps} · ${l.ph}</div><div class="pipe">${STAGES.map((s,k)=>`<button class="${l.s>k?'done':''}" data-lead="${LEADS.indexOf(l)}" data-stage="${k+1}">${s}</button>`).join('')}</div></div>`).join(''):'<div class="note">На этот день замеров нет</div>';
+}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){tab=t.dataset.tab;drawOwner()}const p=e.target.closest('[data-stage]');if(p){const l=LEADS[+p.dataset.lead];const s=+p.dataset.stage;l.s=l.s===s?s-1:s;drawOwner()}});
+$('send').onclick=()=>{
+ const name=$('name').value.trim()||'Клиент',phone=$('phone').value.trim()||'+7 7** *** ** **',r=calc();
+ $('waText').textContent=`🆕 Заявка на замер\nИмя: ${name}\nТелефон: ${phone}\nКомната: ${st.room}, ${st.area} м²\nПолотно: ${st.type}\nСветильники: ${st.lamps} шт\nЦена: от ${fmt(r.t)}\nЗамер: ${st.day}, ${st.slot}`;
+ LEADS.forEach(l=>l.fresh=false);
+ LEADS.unshift({n:name,ph:phone,d:st.day,t:st.slot,room:st.room,area:st.area,type:st.type,lamps:st.lamps,sum:r.t,s:1,fresh:true});
+ tab='Все';drawOwner();
+ $('send').style.display='none';$('ok').classList.add('show');
+};
+$('again').onclick=()=>{$('ok').classList.remove('show');$('send').style.display='';window.scrollTo({top:0,behavior:'smooth'})};
+draw();drawOwner();
+</script>
+</body>
+</html>
